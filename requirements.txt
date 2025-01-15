@@ -5,5 +5,6 @@ fpdf==1.7.2
 scikit-learn>=0.24.2
 numpy>=1.21.2
 pillow==8.4.0
+--no-cache-dir
 pytz
 python-dateutil
