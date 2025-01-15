@@ -8,6 +8,7 @@ import os
 import base64
 import time
 import tempfile
+from datetime import datetime
 
 # Função para exportar o PDF
 def export_pdf(content, filename, img_path):
@@ -49,12 +50,12 @@ data = load_data()
 
 if not data.empty:
     st.title("Previsão do Preço do Petróleo 🛢️")
-    st.write("Utilize esta aplicação para prever o preço do petróleo Brent com base nos dados históricos do IPEADATA.")
-    st.subheader("Dados Históricos")
+    st.write("Utilize esta aplicação para prever o preço do petróleo Brent com base nos dados históricos do IPEADATA. 🚀🔍")
+    st.subheader("📈 Dados Históricos ")
     st.write(data.tail(10))
 
     # Plot histórico do último ano
-    st.subheader("Evolução do Preço - Último Ano")
+    st.subheader("📅 Evolução do Preço - Último Ano")
     last_year_data = data[data.index.year == data.index.year.max() - 1]
 
 
@@ -75,19 +76,22 @@ if not data.empty:
     st.pyplot(fig)
 
     # Treinamento do modelo preditivo
-    st.subheader("Treinamento do Modelo")
+    st.subheader("⚙️ Treinamento do Modelo")
     model, metrics = train_model(data)
     st.write("Desempenho do Modelo:")
     st.write(metrics)
 
     # Escolha de previsão
-    st.subheader("Escolha o Tipo de Previsão")
+    st.subheader("🔍 Escolha o Tipo de Previsão")
     option = st.radio("Selecione:", ("Média Mensal", "Preço Diário"))
 
 
     if option == "Média Mensal":
-        year = st.number_input("Ano", min_value=1987, max_value=2025, step=1)
-        month = st.selectbox("Mês", list(calendar.month_name)[1:])
+        current_year = datetime.now().year
+        current_month = datetime.now().month
+        year = st.number_input("Ano", min_value=1987, max_value=2025, step=1, value=current_year)
+        month = st.selectbox("Mês", list(calendar.month_name)[1:], index=current_month - 1)
+        
 
         if st.button("Prever"):
             month_num = list(calendar.month_name).index(month)
@@ -97,7 +101,7 @@ if not data.empty:
             st.session_state['month'] = month
             st.session_state['year'] = year
 
-            st.success(f"O preço médio previsto do petróleo Brent para o mês {month}/{year} é de ${avg_price:.2f} por barril.")
+            st.success(f"📈 O preço médio previsto do petróleo Brent para o mês {month}/{year} é de ${avg_price:.2f} por barril.")
 
             
             local_plot_path = "temp_plot.png"
@@ -117,33 +121,33 @@ if not data.empty:
             st.pyplot(plt)
             
 
-        if 'avg_price' in st.session_state and st.button("Exportar"):
+        if 'avg_price' in st.session_state and st.button("📤 Exportar"):
             text = f"O preço médio previsto do petróleo Brent para o mês {st.session_state['month']}/{st.session_state['year']} é de ${st.session_state['avg_price']:.2f} por barril."
             path = f'previsao_mensal_{st.session_state["month"]}_{st.session_state["year"]}.pdf'
             imagem = "temp_plot.png"
             pdf_path, error = export_pdf(text, path, imagem)
             if pdf_path:
-                status_message = st.success("Iniciando download...")
+                status_message = st.success("🔄 Iniciando download...")
                 time.sleep(5)
                 status_message.empty() 
                 st.write("")
-                status_message = st.success("O download foi realizado com sucesso!")
+                status_message = st.success("✅ O download foi realizado com sucesso!")
                 time.sleep(8)
                 status_message.empty() 
                 st.write("")
                 download_pdf(pdf_path)
             else:
-                st.error(f"Falha ao gerar o PDF. Motivo: {error}")
+                st.error(f"⚠️ Falha ao gerar o PDF. Motivo: {error}")
 
     elif option == "Preço Diário":
-        date = st.date_input("Informe a data que deseja prever")
+        date = st.date_input("📅 Informe a data que deseja prever")
 
         if st.button("Prever"):
             daily_price = predict_price(model, date.year, date.month, date.day)
             st.session_state['daily_price'] = daily_price
             st.session_state['date'] = date
 
-            st.success(f"O preço previsto do petróleo Brent para o dia {date.day}/{date.month}/{date.year} é de ${daily_price:.2f} por barril.")
+            st.success(f"📈 O preço previsto do petróleo Brent para o dia {date.day}/{date.month}/{date.year} é de ${daily_price:.2f} por barril.")
 
             local_plot_path = "temp_plot.png"
             future_days = pd.date_range(start=f"{date.year}-{date.month}-01", periods=(pd.Timestamp(date).days_in_month), freq="D")
@@ -162,24 +166,24 @@ if not data.empty:
             st.pyplot(plt)
             
 
-        if 'daily_price' in st.session_state and st.button("Exportar"):
+        if 'daily_price' in st.session_state and st.button("📤 Exportar"):
             
             text = f"O preço previsto do petróleo Brent para o dia {st.session_state['date'].day}/{st.session_state['date'].month}/{st.session_state['date'].year} é de ${st.session_state['daily_price']:.2f} por barril."
             path = f'previsao_diaria_{st.session_state["date"].day}_{st.session_state["date"].month}_{st.session_state["date"].year}.pdf'
             imagem = "temp_plot.png"
             pdf_path, error = export_pdf(text, path, imagem)
             if pdf_path:
-                status_message = st.success("Iniciando download...")
+                status_message = st.success("🔄 Iniciando download...")
                 time.sleep(5)
                 status_message.empty() 
                 st.write("")
-                status_message = st.success("O download foi realizado com sucesso!")
+                status_message = st.success("✅ O download foi realizado com sucesso!")
                 time.sleep(8)
                 status_message.empty() 
                 st.write("")
                 download_pdf(pdf_path)
             else:
-                st.error(f"Falha ao gerar o PDF. Motivo: {error}")
+                st.error(f"⚠️ Falha ao gerar o PDF. Motivo: {error}")
 
     st.markdown("---")
-    st.markdown("Powered by Wesley Fonseca")
+    st.markdown("🛠 Powered by Wesley Fonseca")
