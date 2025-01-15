@@ -5,3 +5,4 @@ fpdf==1.7.2
 scikit-learn>=0.24.2
 numpy>=1.21.2
 python-dateutil
+lxml==4.9.3
