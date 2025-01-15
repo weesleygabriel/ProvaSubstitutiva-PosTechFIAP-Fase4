@@ -1,4 +1,3 @@
-pip --no-cache-dir
 pip install --upgrade pip
 streamlit>=1.25.0
 pandas>=1.3.3
@@ -6,6 +5,6 @@ matplotlib>=3.4.3
 fpdf==1.7.2
 scikit-learn>=0.24.2
 numpy>=1.21.2
-pillow==8.4.0
+pillow==8.4.0 --prefer-binary=never
 pytz
 python-dateutil
