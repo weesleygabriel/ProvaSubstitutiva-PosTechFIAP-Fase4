@@ -12,3 +12,6 @@ Este aplicativo permite prever o preço do petróleo Brent com base em dados his
 3. No terminal, acesse a pasta do projeto e execute: pip install -r requirements.txt
 4. Abra a pasta do projeto no terminal e execvute: streamlit run app.py
 5. O aplicativo abrirá automaticamente no navegador. Se não abrir, acesse o link fornecido no terminal (geralmente http://localhost:8501).
+
+## Link da Aplicação Online
+1. https://provasubstitutiva-postechfiap-fase4-bkav7akpw3kzsupf6ndsvk.streamlit.app/
